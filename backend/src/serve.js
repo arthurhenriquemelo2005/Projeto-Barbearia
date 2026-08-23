@@ -7,6 +7,7 @@ const rotasusuario = require("./rotas/rotasusuarios");
 const rotaslogin = require("./rotas/rotaslogin");
 const rotasacesso = require("./rotas/rotasacesso");
 const rotasservicos = require("./rotas/rotasservicos");
+const rotasagendamento = require("./rotas/rotasagendamento");
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use("/usuarios",rotasusuario);
 app.use("/login", rotaslogin);
 app.use("/acesso", rotasacesso);
 app.use("/servicos", rotasservicos);
+app.use("/agendamentos", rotasagendamento);
 
 app.get("/",(req,res) => {
     res.json({
