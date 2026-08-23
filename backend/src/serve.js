@@ -1,10 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 
+//Variaveis das rotas
 const banco = require("./banco/conexao")
-const rotasusuario = require("./rotas/rotasusuarios")
-const rotaslogin = require("./rotas/rotaslogin")
-const rotasacesso = require("./rotas/rotasacesso")
+const rotasusuario = require("./rotas/rotasusuarios");
+const rotaslogin = require("./rotas/rotaslogin");
+const rotasacesso = require("./rotas/rotasacesso");
+const rotasservicos = require("./rotas/rotasservicos");
 
 const app = express();
 
@@ -14,6 +16,7 @@ app.use(express.json());
 app.use("/usuarios",rotasusuario);
 app.use("/login", rotaslogin);
 app.use("/acesso", rotasacesso);
+app.use("/servicos", rotasservicos);
 
 app.get("/",(req,res) => {
     res.json({
