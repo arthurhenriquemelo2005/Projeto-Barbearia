@@ -121,4 +121,36 @@ rota.put("/:id/cancelar", (req, res) => {
     );
 })
 
+rota.get("/", (req, res) => {
+
+    const sql = `
+    SELECTSELECT
+            a.id,
+            u.nome AS cliente,
+            s.nome AS servico,
+            s.preco,
+            a.data,
+            a.hora,
+            a.status
+        FROM agendamentos a
+        INNER JOIN usuarios u
+            ON a.usuario_id = u.id
+        INNER JOIN servicos s
+            ON a.servico_id = s.id
+        ORDER BY a.data, a.hora
+    `;
+    
+    banco.query (sql, (erro, resultado) => {
+
+        if(erro){
+            console.error("Erro em buscar agendamentos:", erro.message);
+            return res.status(500).json({
+                mensagem: "Erro ao buscar agendamentos"
+            });
+        }
+
+        res.json(resultado)
+    })
+});
+
 module.exports = rota;
