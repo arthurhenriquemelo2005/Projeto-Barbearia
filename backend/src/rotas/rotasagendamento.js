@@ -124,7 +124,7 @@ rota.put("/:id/cancelar", (req, res) => {
 rota.get("/", (req, res) => {
 
     const sql = `
-    SELECT
+    SELECT  
             a.id,
             u.nome AS cliente,
             s.nome AS servico,
@@ -151,6 +151,42 @@ rota.get("/", (req, res) => {
 
         res.json(resultado)
     })
+});
+
+rota.put("/:id/concluir", (req, res) => {
+
+    const {id} = req.params;
+
+    const sql = `
+        UPDATE agendamentos
+        SET status = 'CONCLUIDO'
+        WHERE id = ?
+        AND status = 'AGENDADO'
+    `;
+
+    banco.query(
+        sql,
+        [id],
+        (erro, resultado) =>{
+            
+            if(erro){
+                console.error("Erro ao concluir o atendimento:", erro.message);
+
+                return res.status(500).json({
+                    mensagem: "Erro ao concluir o atendimento"
+                });
+            }
+
+            if(resultado.affectedRows === 0){
+                return res.status(404).json({
+                mensagem: "Agendamento não encontrado ou ele não está agendado"});
+            }
+
+            res.json({
+                mensagem: "Atendimento concluido com sucesso"
+            });
+        }
+    );
 });
 
 module.exports = rota;
