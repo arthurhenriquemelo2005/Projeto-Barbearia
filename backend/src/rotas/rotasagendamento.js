@@ -124,7 +124,7 @@ rota.put("/:id/cancelar", (req, res) => {
 rota.get("/", (req, res) => {
 
     const sql = `
-    SELECTSELECT
+    SELECT
             a.id,
             u.nome AS cliente,
             s.nome AS servico,

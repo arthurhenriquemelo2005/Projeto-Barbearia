@@ -39,17 +39,7 @@ app.get("/clientes", (req, res) => {
     });
 });
 
-app.get ("/agendamentos", (req,res) => {
-    const sql = "SELECT * FROM agendamentos";
-    
-    banco.query(sql,(erro, resultados) => {
-        if(erro){
-            console.error("Erro ao buscar agendamentos", erro.message);
-            return res.status(500).json({erro: "Erro em buscar agendamentos no banco"});
-        }
-        res.json(resultados);
-    })
-})
+
 app.listen(3000, () =>  {
     console.log("Servidor tá rodando na porta 3000 em http://localhost:3000");
 })
