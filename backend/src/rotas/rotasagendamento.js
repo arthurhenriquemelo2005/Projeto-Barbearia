@@ -84,4 +84,41 @@ rota.post("/", (req, res) => {
     );
 });
 
+rota.put("/:id/cancelar", (req, res) => {
+
+    const {id} = req.params;
+
+    const sql = `
+    UPDATE agendamentos
+    SET status = 'CANCELADO'
+    WHERE id = ?
+    AND status = 'AGENDADO'
+    `;
+
+    banco.query(
+        sql,
+        [id],
+        (erro, resultado) => {
+
+            if(erro){
+                console.error("Erro em cancelar o agendamento", erro.message);
+
+                return res.status(500).json({
+                    mensagem: "Erro ao cancelar o agendamento"
+                });
+            }
+
+            if(resultado.affectedRows === 0){
+                return res.status(404).json({
+                    mensagem: "Agendamento não encontrado ou já foi cancelado"
+                });
+            }
+
+            res.json({
+                mensagem: "Agendamento cancelado com sucesso"
+            })
+        }
+    );
+})
+
 module.exports = rota;
