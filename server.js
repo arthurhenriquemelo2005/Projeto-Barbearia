@@ -45,5 +45,5 @@ app.get("/clientes", (req, res) => {
 
 
 app.listen(PORT, () => {
-    console.log(`Servidor funcionando na porta ${PORT}`);
+    console.log(`Servidor funcionando!`);
 });
