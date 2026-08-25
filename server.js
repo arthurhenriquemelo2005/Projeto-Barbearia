@@ -4,7 +4,7 @@ const cors = require("cors");
 //Variaveis das rotas
 const banco = require("./src/banco/conexao")
 const rotasusuario = require("./src/rotas/rotasusuarios");
-const rotaslogin = require("./src/rotas/rotaslogin");
+const rotaslogin = require("./src/rotas/login");
 const rotasacesso = require("./src/rotas/rotasacesso");
 const rotasservicos = require("./src/rotas/rotasservicos");
 const rotasagendamento = require("./src/rotas/rotasagendamento");

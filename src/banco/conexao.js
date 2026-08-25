@@ -4,6 +4,7 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
+module.exports = pool;
 //Criação da conexão com o banco
 /*const pool = mysql.createConnection({
 
