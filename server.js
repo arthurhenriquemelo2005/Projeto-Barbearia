@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 
 //Variaveis das rotas
-const banco = require("./src/banco/conexao")
 const rotasusuario = require("./src/rotas/rotasusuarios");
 const rotasAuth = require("./src/rotas/auth");
 const rotasacesso = require("./src/rotas/rotasacesso");
@@ -33,3 +33,4 @@ app.get("/",(req,res) => {
 app.listen(PORT, () => {
     console.log(`Servidor funcionando!`);
 });
+
