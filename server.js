@@ -2,13 +2,13 @@ const express = require("express");
 const cors = require("cors");
 
 //Variaveis das rotas
-const banco = require("./banco/conexao")
-const rotasusuario = require("./rotas/rotasusuarios");
-const rotaslogin = require("./rotas/rotaslogin");
-const rotasacesso = require("./rotas/rotasacesso");
-const rotasservicos = require("./rotas/rotasservicos");
-const rotasagendamento = require("./rotas/rotasagendamento");
-const rotasfaturamento = require("./rotas/rotasfaturamento");
+const banco = require("./src/banco/conexao")
+const rotasusuario = require("./src/rotas/rotasusuarios");
+const rotaslogin = require("./src/rotas/rotaslogin");
+const rotasacesso = require("./src/rotas/rotasacesso");
+const rotasservicos = require("./src/rotas/rotasservicos");
+const rotasagendamento = require("./src/rotas/rotasagendamento");
+const rotasfaturamento = require("./src/rotas/rotasfaturamento");
 
 const app = express();
 
