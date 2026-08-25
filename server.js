@@ -4,7 +4,7 @@ const cors = require("cors");
 //Variaveis das rotas
 const banco = require("./src/banco/conexao")
 const rotasusuario = require("./src/rotas/rotasusuarios");
-const rotaslogin = require("./src/rotas/auth");
+const { rotasAuth } = require("./src/rotas/auth");
 const rotasacesso = require("./src/rotas/rotasacesso");
 const rotasservicos = require("./src/rotas/rotasservicos");
 const rotasagendamento = require("./src/rotas/agendamentos");
@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/usuarios",rotasusuario);
-app.use("/login", rotaslogin);
+app.use("/auth", rotasAuth);
 app.use("/acesso", rotasacesso);
 app.use("/servicos", rotasservicos);
 app.use("/agendamentos", rotasagendamento);
