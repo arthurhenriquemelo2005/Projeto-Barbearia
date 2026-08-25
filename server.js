@@ -10,6 +10,7 @@ const rotasservicos = require("./src/rotas/rotasservicos");
 const rotasagendamento = require("./src/rotas/rotasagendamento");
 const rotasfaturamento = require("./src/rotas/rotasfaturamento");
 
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());
@@ -42,6 +43,7 @@ app.get("/clientes", (req, res) => {
 });
 
 
-app.listen(3000, () =>  {
-    console.log("Servidor tá rodando na porta 3000 em http://localhost:3000");
-})
+
+app.listen(PORT, () => {
+    console.log(`Servidor funcionando na porta ${PORT}`);
+});
