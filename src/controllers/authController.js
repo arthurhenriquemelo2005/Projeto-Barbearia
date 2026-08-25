@@ -1,12 +1,10 @@
-const express = require("express");
 const pool = require("../banco/conexao");
-const { SQL } = require("../helpers/querys");
+const { SQL } = require("../banco/querys");
 const gerarToken = require("../middleware/token");
 const { compararHash } = require("../helpers/hash");
 
-const rotas = express.Router();
 
-rotas.post("/", async (req, res) => {
+const login = async (req, res) => {
     try {
         const { email, senha } = req.body;
 
@@ -49,6 +47,5 @@ rotas.post("/", async (req, res) => {
             mensagem: "Erro interno no servidor"
         });
     }
-});
+}
 
-module.exports = rotas;

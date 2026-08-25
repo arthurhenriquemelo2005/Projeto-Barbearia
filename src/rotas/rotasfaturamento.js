@@ -11,6 +11,7 @@ rota.get("/", (req, res) => {
             ON a.servico_id = s.id
         WHERE a.status = 'CONCLUIDO'
         `;
+        
     banco.query(sql, (erro, resultado) => {
 
         if(erro){

@@ -4,10 +4,10 @@ const cors = require("cors");
 //Variaveis das rotas
 const banco = require("./src/banco/conexao")
 const rotasusuario = require("./src/rotas/rotasusuarios");
-const rotaslogin = require("./src/rotas/login");
+const rotaslogin = require("./src/rotas/auth");
 const rotasacesso = require("./src/rotas/rotasacesso");
 const rotasservicos = require("./src/rotas/rotasservicos");
-const rotasagendamento = require("./src/rotas/rotasagendamento");
+const rotasagendamento = require("./src/rotas/agendamentos");
 const rotasfaturamento = require("./src/rotas/rotasfaturamento");
 
 const PORT = process.env.PORT || 3000;
@@ -29,20 +29,6 @@ app.get("/",(req,res) => {
         
     })
 })
-
-app.get("/clientes", (req, res) => {
-    const sql = " SELECT * FROM usuarios";
-
-    banco.query(sql, (erro, resultados) => {
-        if (erro) {
-            console.error("Erro ao buscar clientes:", erro.message);
-            return res.status(500).json({ erro: "Erro ao buscar clientes no banco" });
-        }
-        res.json(resultados);
-    });
-});
-
-
 
 app.listen(PORT, () => {
     console.log(`Servidor funcionando!`);

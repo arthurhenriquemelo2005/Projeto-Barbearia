@@ -1,5 +1,6 @@
 const express = require("express");
 const banco = require("../banco/conexao");
+const { SQL } = require("../banco/querys");
 
 const rota = express.Router();
 
@@ -15,21 +16,14 @@ rota.post("/", (req, res) => {
     // Verifica se todos os dados foram enviados
     if (!usuario_id || !servico_id || !data || !hora) {
         return res.status(400).json({
-            mensagem: "Preencha todos os campos para agendar"
+            mensagem: "Envie todos os dados!"
         });
     }
 
     // Primeiro verifica se o horário já está ocupado
-    const verificarHorario = `
-        SELECT *
-        FROM agendamentos
-        WHERE data = ?
-        AND hora = ?
-        AND status = 'AGENDADO'
-    `;
 
     banco.query(
-        verificarHorario,
+        SQL.verificarHorario,
         [data, hora],
         (erro, resultados) => {
 
@@ -86,7 +80,7 @@ rota.post("/", (req, res) => {
 
 rota.put("/:id/cancelar", (req, res) => {
 
-    const {id} = req.params;
+    const { id } = req.params;
 
     const sql = `
     UPDATE agendamentos
@@ -100,7 +94,7 @@ rota.put("/:id/cancelar", (req, res) => {
         [id],
         (erro, resultado) => {
 
-            if(erro){
+            if (erro) {
                 console.error("Erro em cancelar o agendamento", erro.message);
 
                 return res.status(500).json({
@@ -108,7 +102,7 @@ rota.put("/:id/cancelar", (req, res) => {
                 });
             }
 
-            if(resultado.affectedRows === 0){
+            if (resultado.affectedRows === 0) {
                 return res.status(404).json({
                     mensagem: "Agendamento não encontrado ou já foi cancelado"
                 });
@@ -139,10 +133,10 @@ rota.get("/", (req, res) => {
             ON a.servico_id = s.id
         ORDER BY a.data, a.hora
     `;
-    
-    banco.query (sql, (erro, resultado) => {
 
-        if(erro){
+    banco.query(sql, (erro, resultado) => {
+
+        if (erro) {
             console.error("Erro em buscar agendamentos:", erro.message);
             return res.status(500).json({
                 mensagem: "Erro ao buscar agendamentos"
@@ -155,7 +149,7 @@ rota.get("/", (req, res) => {
 
 rota.put("/:id/concluir", (req, res) => {
 
-    const {id} = req.params;
+    const { id } = req.params;
 
     const sql = `
         UPDATE agendamentos
@@ -167,9 +161,9 @@ rota.put("/:id/concluir", (req, res) => {
     banco.query(
         sql,
         [id],
-        (erro, resultado) =>{
-            
-            if(erro){
+        (erro, resultado) => {
+
+            if (erro) {
                 console.error("Erro ao concluir o atendimento:", erro.message);
 
                 return res.status(500).json({
@@ -177,9 +171,10 @@ rota.put("/:id/concluir", (req, res) => {
                 });
             }
 
-            if(resultado.affectedRows === 0){
+            if (resultado.affectedRows === 0) {
                 return res.status(404).json({
-                mensagem: "Agendamento não encontrado ou ele não está agendado"});
+                    mensagem: "Agendamento não encontrado ou ele não está agendado"
+                });
             }
 
             res.json({
