@@ -1,7 +1,7 @@
 const pool = require("../banco/conexao");
 const SQL = require("../banco/querys");
 const gerarToken = require("../middleware/token");
-const { compararHash } = require("../helpers/hash");
+const { gerarHash, compararHash } = require("../helpers/hash");
 
 
 const login = async (req, res) => {
@@ -10,7 +10,7 @@ const login = async (req, res) => {
 
         if (!email || !senha) {
             return res.status(400).json({
-                mensagem: "Informe email e senha"
+                mensagem: "Informe todos os campos"
             });
         }
 
@@ -35,7 +35,7 @@ const login = async (req, res) => {
             });
         }
 
-        res.json({
+        res.status(200).json({
             mensagem: "Login realizado",
             token: gerarToken({ id: usuario.id })
         });
@@ -47,9 +47,42 @@ const login = async (req, res) => {
             mensagem: "Erro interno no servidor"
         });
     }
-}
+};
 
+const register = async (req, res) => {
+    try {
+        const { nome, email, senha } = req.body;
+
+        if (!nome || !email || !senha) {
+            return res.status(400).json({
+                mensagem: "Informe todos os campos"
+            })
+        }
+
+        const senhaHash = await gerarHash(senha);
+
+        const { rows } = await pool.query(SQL.registrar, [nome, email, senhaHash]);
+
+        res.status(201).json({
+            mensagem: "Cadastro realizado com sucesso"
+        });
+
+    } catch (erro) {
+        console.error(erro);
+
+        if (erro.code === "23505") {
+            return res.status(409).json({
+                mensagem: "Este e-mail já está cadastrado"
+            });
+        }
+
+        res.status(500).json({
+            mensagem: "Erro interno no servidor"
+        })
+    }
+};
 
 module.exports = {
-    login
+    login,
+    register
 };

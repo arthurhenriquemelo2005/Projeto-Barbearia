@@ -1,5 +1,7 @@
-const { SQL } = require("../banco/querys");
+const banco = require("../banco/conexao");
+const SQL = require("../banco/querys");
 
+const criarAgendamento = (req, res) => {
 
     const {
         usuario_id,
@@ -8,14 +10,11 @@ const { SQL } = require("../banco/querys");
         hora
     } = req.body;
 
-    // Verifica se todos os dados foram enviados
     if (!usuario_id || !servico_id || !data || !hora) {
         return res.status(400).json({
             mensagem: "Envie todos os dados!"
         });
     }
-
-    // Primeiro verifica se o horário já está ocupado
 
     banco.query(
         SQL.verificarHorario,
@@ -33,22 +32,14 @@ const { SQL } = require("../banco/querys");
                 });
             }
 
-            // Se encontrou um agendamento, o horário está ocupado
             if (resultados.length > 0) {
                 return res.status(409).json({
                     mensagem: "Esse horário já está ocupado"
                 });
             }
 
-            // Se tiver livre, cria o agendamento
-            const sql = `
-                INSERT INTO agendamentos
-                (usuario_id, servico_id, data, hora)
-                VALUES (?, ?, ?, ?)
-            `;
-
             banco.query(
-                sql,
+                SQL.criarAgendamento,
                 [usuario_id, servico_id, data, hora],
                 (erro, resultado) => {
 
@@ -67,7 +58,111 @@ const { SQL } = require("../banco/querys");
                         mensagem: "Agendamento realizado com sucesso",
                         id: resultado.insertId
                     });
+
                 }
             );
         }
     );
+};
+
+
+const cancelarAgendamento = (req, res) => {
+
+    const { id } = req.params;
+
+    banco.query(
+        SQL.cancelarAgendamento,
+        [id],
+        (erro, resultado) => {
+
+            if (erro) {
+                console.error(
+                    "Erro em cancelar o agendamento:",
+                    erro.message
+                );
+
+                return res.status(500).json({
+                    mensagem: "Erro ao cancelar o agendamento"
+                });
+            }
+
+            if (resultado.affectedRows === 0) {
+                return res.status(404).json({
+                    mensagem: "Agendamento não encontrado ou já foi cancelado"
+                });
+            }
+
+            res.json({
+                mensagem: "Agendamento cancelado com sucesso"
+            });
+
+        }
+    );
+};
+
+
+const buscarAgendamentos = (req, res) => {
+
+    banco.query(
+        SQL.buscarAgendamentos,
+        (erro, resultado) => {
+
+            if (erro) {
+                console.error(
+                    "Erro em buscar agendamentos:",
+                    erro.message
+                );
+
+                return res.status(500).json({
+                    mensagem: "Erro ao buscar agendamentos"
+                });
+            }
+
+            res.json(resultado);
+
+        }
+    );
+};
+
+
+const concluirAgendamento = (req, res) => {
+
+    const { id } = req.params;
+
+    banco.query(
+        SQL.concluirAgendamento,
+        [id],
+        (erro, resultado) => {
+
+            if (erro) {
+                console.error(
+                    "Erro ao concluir o atendimento:",
+                    erro.message
+                );
+
+                return res.status(500).json({
+                    mensagem: "Erro ao concluir o atendimento"
+                });
+            }
+
+            if (resultado.affectedRows === 0) {
+                return res.status(404).json({
+                    mensagem: "Agendamento não encontrado ou ele não está agendado"
+                });
+            }
+
+            res.json({
+                mensagem: "Atendimento concluído com sucesso"
+            });
+
+        }
+    );
+};
+
+
+module.exports = {
+    criarAgendamento,
+    cancelarAgendamento,
+    buscarAgendamentos,
+    concluirAgendamento
+};
