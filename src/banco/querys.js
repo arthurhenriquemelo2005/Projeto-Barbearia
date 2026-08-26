@@ -75,9 +75,9 @@ const SQL = {
     concluirAgendamento: `
         UPDATE agendamentos
         SET status = 'CONCLUIDO'
-        WHERE id = ?
-        AND status = 'AGENDADO'
+        WHERE usuario_id = $1 AND status = 'AGENDADO'
     `
+
 };
 
 module.exports = SQL;

@@ -22,7 +22,7 @@ const buscarAgendamentos = async (req, res) => {
     try {
         const { usuario_id } = req.body;
 
-        const { rows } = await pool.query(SQL.buscarAgendamentosCliente ,[usuario_id]);
+        const { rows } = await pool.query(SQL.buscarAgendamentosCliente, [usuario_id]);
 
         if (rows.lenght == 0) {
             return res.status(200).json({
@@ -34,7 +34,7 @@ const buscarAgendamentos = async (req, res) => {
 
         res.status(200).json({
             mensagem: "Agendamentos encontrados com sucesso",
-            dados: agendamentos 
+            dados: agendamentos
         });
 
     } catch (erro) {
@@ -46,7 +46,16 @@ const buscarAgendamentos = async (req, res) => {
 };
 
 const concluirAgendamento = async (req, res) => {
-    
+    try {
+        const { usuario_id } = req.body;
+
+        
+    } catch (erro) {
+        console.log(erro);
+        res.status(500).json({
+            mensagem: "Erro interno no servidor"
+        });
+    }
 }
 
 module.exports = {
