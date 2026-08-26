@@ -42,21 +42,27 @@ const SQL = {
     `,
     buscarAgendamentosCliente: `
         SELECT
-        s.nome AS servico,
-        s.preco AS preco,
-        a.data AS data,
-        a.hora AS hora,
-        a.status AS status
+            ROW_NUMBER() OVER (
+                ORDER BY a.data, a.hora, a.id
+            ) AS numero,
+            s.nome AS servico,
+            s.preco AS preco,
+            a.data AS data,
+            a.hora AS hora,
+            a.status AS status
         FROM agendamentos a
         INNER JOIN usuarios u
             ON a.usuario_id = u.id
         INNER JOIN servicos s
             ON a.servico_id = s.id
         WHERE a.usuario_id = $1
-        ORDER BY a.data, a.hora
+        ORDER BY a.data, a.hora, a.id
     `,
     buscarAgendamentosBarbeiro: `
         SELECT
+            ROW_NUMBER() OVER (
+                ORDER BY a.data, a.hora, a.id
+            ) AS numero,
             a.id,
             u.nome AS cliente,
             s.nome AS servico,
@@ -69,15 +75,15 @@ const SQL = {
             ON a.usuario_id = u.id
         INNER JOIN servicos s
             ON a.servico_id = s.id
-        ORDER BY a.data, a.hora
+        ORDER BY a.data, a.hora, a.id
     `,
-
     concluirAgendamento: `
         UPDATE agendamentos
         SET status = 'CONCLUIDO'
-        WHERE usuario_id = $1 AND status = 'AGENDADO'
+        WHERE usuario_id = $1
+        AND id = $2
+        AND status = 'AGENDADO'
     `
-
 };
 
 module.exports = SQL;
