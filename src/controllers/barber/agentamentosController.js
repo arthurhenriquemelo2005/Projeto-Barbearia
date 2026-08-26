@@ -1,6 +1,44 @@
 const banco = require("../banco/conexao");
 const SQL = require("../banco/querys");
 
+
+
+const buscarAgendamentos = (req, res) => {
+
+    try {
+        const { email } = req.body;
+
+        const { rows } = pool.query(SQL.verificarTipoUsuario, [email]);
+
+        const usuario = rows[0];
+
+    } catch (erro) {
+        res.status(500).json({
+            mensagem: "Erro interno no servidor!"
+        });
+    }
+
+    banco.query(
+        SQL.buscarAgendamentos,
+        (erro, resultado) => {
+
+            if (erro) {
+                console.error(
+                    "Erro em buscar agendamentos:",
+                    erro.message
+                );
+
+                return res.status(500).json({
+                    mensagem: "Erro ao buscar agendamentos"
+                });
+            }
+
+            res.json(resultado);
+
+        }
+    );
+};
+
 const criarAgendamento = (req, res) => {
 
     const {
@@ -95,30 +133,6 @@ const cancelarAgendamento = (req, res) => {
             res.json({
                 mensagem: "Agendamento cancelado com sucesso"
             });
-
-        }
-    );
-};
-
-
-const buscarAgendamentos = (req, res) => {
-
-    banco.query(
-        SQL.buscarAgendamentos,
-        (erro, resultado) => {
-
-            if (erro) {
-                console.error(
-                    "Erro em buscar agendamentos:",
-                    erro.message
-                );
-
-                return res.status(500).json({
-                    mensagem: "Erro ao buscar agendamentos"
-                });
-            }
-
-            res.json(resultado);
 
         }
     );

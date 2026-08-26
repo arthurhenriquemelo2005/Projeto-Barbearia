@@ -1,12 +1,17 @@
 const SQL = {
     Login: `
-        SELECT id, senha
+        SELECT senha, email
         FROM usuarios
         WHERE email = $1
     `,
     registrar: `
         INSERT INTO usuarios (nome, email, senha)
         VALUES ($1, $2, $3)
+    `,
+    verificarUsuario: `
+        SELECT id, tipo
+        FROM usuarios
+        WHERE email = $1
     `,
     verificarHorario: `
         SELECT *
@@ -23,10 +28,10 @@ const SQL = {
         AND status = 'AGENDADO'
     `,
 
-    criarAgendamento: `
+    agendar: `
         INSERT INTO agendamentos
         (usuario_id, servico_id, data, hora)
-        VALUES (?, ?, ?, ?)
+        VALUES ($1, $2, $3, $4)
     `,
 
     cancelarAgendamento: `
@@ -35,8 +40,22 @@ const SQL = {
         WHERE id = ?
         AND status = 'AGENDADO'
     `,
-
-    buscarAgendamentos: `
+    buscarAgendamentosCliente: `
+        SELECT
+        s.nome AS servico,
+        s.preco AS preco,
+        a.data AS data,
+        a.hora AS hora,
+        a.status AS status
+        FROM agendamentos a
+        INNER JOIN usuarios u
+            ON a.usuario_id = u.id
+        INNER JOIN servicos s
+            ON a.servico_id = s.id
+        WHERE a.usuario_id = $1
+        ORDER BY a.data, a.hora
+    `,
+    buscarAgendamentosBarbeiro: `
         SELECT
             a.id,
             u.nome AS cliente,

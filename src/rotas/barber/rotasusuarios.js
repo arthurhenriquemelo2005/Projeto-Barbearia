@@ -1,5 +1,5 @@
 const express = require("express");
-const db = require("../banco/conexao");
+const db = require("../../banco/conexao");
 
 const rota = express.Router();
 

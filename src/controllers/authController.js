@@ -37,7 +37,9 @@ const login = async (req, res) => {
 
         res.status(200).json({
             mensagem: "Login realizado",
-            token: gerarToken({ id: usuario.id })
+            token: gerarToken({ 
+                id: usuario.email
+            })
         });
 
     } catch (erro) {
