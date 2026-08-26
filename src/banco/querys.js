@@ -37,7 +37,8 @@ const SQL = {
     cancelarAgendamento: `
         UPDATE agendamentos
         SET status = 'CANCELADO'
-        WHERE id = ?
+        WHERE usuario_id = $1
+        AND id = $2
         AND status = 'AGENDADO'
     `,
     buscarAgendamentosCliente: `

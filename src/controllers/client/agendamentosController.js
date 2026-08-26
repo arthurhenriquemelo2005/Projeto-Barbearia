@@ -55,15 +55,32 @@ const concluirAgendamento = async (req, res) => {
             mensagem: "Agendamento concluido com sucesso"
         })
     } catch (erro) {
-        console.log(erro);
         res.status(500).json({
             mensagem: "Erro interno no servidor"
         });
     }
 }
 
+const cancelarAgendamento = async (req, res) => {
+    try {
+        const {usuario_id, agendamento_id} = req.body;
+
+        await pool.query(SQL.cancelarAgendamento, [usuario_id, agendamento_id]);
+
+        res.status(201).json({
+            mensagem: "Agendamento cancelado com sucesso"
+        });
+    } catch (erro) {
+        console.log(erro);
+        res.status(500).json({
+            mensagem: "Erro interno no servidor"
+        });
+    }
+};
+
 module.exports = {
     agendar,
     buscarAgendamentos,
-    concluirAgendamento
+    concluirAgendamento,
+    cancelarAgendamento
 };
