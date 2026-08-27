@@ -1,6 +1,6 @@
 const SQL = {
     Login: `
-        SELECT id, senha, tipo
+        SELECT id, senha, tipo, nome
         FROM usuarios
         WHERE email = $1
     `,
