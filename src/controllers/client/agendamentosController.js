@@ -1,10 +1,6 @@
 const pool = require("../../banco/conexao");
 const SQL = require("../../banco/querys");
 
-function verificarTipo(tipo) {
-    return tipo === "CLIENTE" ? true : false;
-}
-
 const agendar = async (req, res) => {
     try {
         const usuario_id = req.usuario.id;
