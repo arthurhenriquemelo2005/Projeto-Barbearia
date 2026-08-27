@@ -72,8 +72,7 @@ const SQL_agendamentos = {
     concluirAgendamento: `
         UPDATE agendamentos
         SET status = 'CONCLUIDO'
-        WHERE usuario_id = $1
-        AND id = $2
+        WHERE id = $1
         AND status = 'AGENDADO'
     `
 };
