@@ -1,5 +1,5 @@
 const pool = require("../banco/conexao");
-const SQL = require("../banco/querys");
+const { SQL_auth } = require("../banco/querys");
 const gerarToken = require("../jwt/gerarToken");
 const { gerarHash, compararHash } = require("../helpers/hash");
 
@@ -14,7 +14,7 @@ const login = async (req, res) => {
             });
         }
 
-        const { rows } = await pool.query(SQL.Login, [email]);
+        const { rows } = await pool.query(SQL_auth.Login, [email]);
 
         if (!rows[0]) {
             return res.status(401).json({
@@ -38,7 +38,7 @@ const login = async (req, res) => {
         res.status(200).json({
             mensagem: "Login realizado com sucesso",
             nome: usuario.nome,
-            token: gerarToken({ 
+            token: gerarToken({
                 id: usuario.id,
                 tipo: usuario.tipo
             })
@@ -65,7 +65,7 @@ const register = async (req, res) => {
 
         const senhaHash = await gerarHash(senha);
 
-        const { rows } = await pool.query(SQL.registrar, [nome, email, senhaHash]);
+        const { rows } = await pool.query(SQL_auth.registrar, [nome, email, senhaHash]);
 
         res.status(201).json({
             mensagem: "Cadastro realizado com sucesso"

@@ -1,5 +1,5 @@
-const pool = require("../../banco/conexao");
-const SQL = require("../../banco/querys");
+const pool = require("../banco/conexao");
+const { SQL_agendamentos } = require("../banco/querys");
 
 const agendar = async (req, res) => {
     try {
@@ -13,15 +13,11 @@ const agendar = async (req, res) => {
             });
         }
 
-        await pool.query(
-            SQL.agendar,
-            [usuario_id, servico_id, data, hora]
-        );
+        await pool.query(SQL_agendamentos.agendar, [usuario_id, servico_id, data, hora]);
 
         res.status(201).json({
             mensagem: "Agendamento realizado com sucesso"
         });
-
     } catch (erro) {
         console.error(erro);
 
@@ -43,7 +39,7 @@ const buscarAgendamentos = async (req, res) => {
         }
 
         const { rows } = await pool.query(
-            SQL.buscarAgendamentosCliente,
+            SQL_agendamentos.buscarAgendamentosCliente,
             [usuario_id]
         );
 
@@ -58,7 +54,38 @@ const buscarAgendamentos = async (req, res) => {
             mensagem: "Agendamentos encontrados com sucesso",
             dados: rows
         });
+    } catch (erro) {
+        console.error(erro);
 
+        res.status(500).json({
+            mensagem: "Erro interno no servidor"
+        });
+    }
+};
+
+const buscarTodosAgendamentos = async (req, res) => {
+    try {
+        if (req.usuario.tipo !== "ADMIN") {
+            return res.status(403).json({
+                mensagem: "Apenas barbeiros"
+            });
+        }
+
+        const { rows } = await pool.query(
+            SQL_agendamentos.buscarTodosAgendamentos
+        );
+
+        if (rows.length === 0) {
+            return res.status(200).json({
+                mensagem: "Não existem agendamentos",
+                dados: []
+            });
+        }
+
+        res.status(200).json({
+            mensagem: "Agendamentos encontrados com sucesso",
+            dados: rows
+        });
     } catch (erro) {
         console.error(erro);
 
@@ -70,24 +97,28 @@ const buscarAgendamentos = async (req, res) => {
 
 const concluirAgendamento = async (req, res) => {
     try {
-        const usuario_id = req.usuario.id;
+        if (req.usuario.tipo !== "ADMIN") {
+            return res.status(403).json({
+                mensagem: "Apenas barbeiros"
+            });
+        }
+
         const { agendamento_id } = req.params;
 
         const resultado = await pool.query(
-            SQL.concluirAgendamento,
-            [usuario_id, agendamento_id]
+            SQL_agendamentos.concluirAgendamento,
+            [agendamento_id]
         );
 
         if (resultado.rowCount === 0) {
             return res.status(404).json({
-                mensagem: "Agendamento não encontrado, já concluído ou não pertence a você"
+                mensagem: "Agendamento não encontrado ou já concluído"
             });
         }
 
         res.status(200).json({
             mensagem: "Agendamento concluído com sucesso"
         });
-
     } catch (erro) {
         console.error(erro);
 
@@ -103,7 +134,7 @@ const cancelarAgendamento = async (req, res) => {
         const { agendamento_id } = req.params;
 
         const resultado = await pool.query(
-            SQL.cancelarAgendamento,
+            SQL_agendamentos.cancelarAgendamento,
             [usuario_id, agendamento_id]
         );
 
@@ -116,7 +147,6 @@ const cancelarAgendamento = async (req, res) => {
         res.status(200).json({
             mensagem: "Agendamento cancelado com sucesso"
         });
-
     } catch (erro) {
         console.error(erro);
 
@@ -130,5 +160,6 @@ module.exports = {
     agendar,
     buscarAgendamentos,
     concluirAgendamento,
-    cancelarAgendamento
+    cancelarAgendamento,
+    buscarTodosAgendamentos
 };

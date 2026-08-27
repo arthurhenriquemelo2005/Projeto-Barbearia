@@ -1,4 +1,10 @@
-const SQL = {
+const SQL_servicos = {
+    servicos: `
+        SELECT * FROM servicos
+    `
+};
+
+const SQL_auth = {
     Login: `
         SELECT id, senha, tipo, nome
         FROM usuarios
@@ -7,27 +13,10 @@ const SQL = {
     registrar: `
         INSERT INTO usuarios (nome, email, senha)
         VALUES ($1, $2, $3)
-    `,
-    verificarUsuario: `
-        SELECT id, tipo
-        FROM usuarios
-        WHERE email = $1
-    `,
-    verificarHorario: `
-        SELECT *
-        FROM agendamentos
-        WHERE data = ?
-        AND hora = ?
-        AND status = 'AGENDADO'
-    `,
-      verificarHorario: `
-        SELECT id
-        FROM agendamentos
-        WHERE data = ?
-        AND hora = ?
-        AND status = 'AGENDADO'
-    `,
+    `
+};
 
+const SQL_agendamentos = {
     agendar: `
         INSERT INTO agendamentos
         (usuario_id, servico_id, data, hora)
@@ -60,18 +49,17 @@ const SQL = {
         WHERE a.usuario_id = $1
         ORDER BY a.data, a.hora, a.id
     `,
-    buscarAgendamentosBarbeiro: `
+    buscarTodosAgendamentos: `
         SELECT
             ROW_NUMBER() OVER (
                 ORDER BY a.data, a.hora, a.id
             ) AS numero,
-            a.id,
-            u.nome AS cliente,
+            a.id AS id,
             s.nome AS servico,
-            s.preco,
-            a.data,
-            a.hora,
-            a.status
+            s.preco AS preco,
+            a.data AS data,
+            a.hora AS hora,
+            a.status AS status
         FROM agendamentos a
         INNER JOIN usuarios u
             ON a.usuario_id = u.id
@@ -88,4 +76,19 @@ const SQL = {
     `
 };
 
-module.exports = SQL;
+const SQL_faturamento = {
+    buscarFaturamento: `
+        SELECT COALESCE(SUM(s.preco), 0) AS faturamento
+        FROM agendamentos a
+        INNER JOIN servicos s
+            ON a.servico_id = s.id
+        WHERE a.status = 'CONCLUIDO'
+    `
+};
+
+module.exports = {
+    SQL_auth,
+    SQL_agendamentos,
+    SQL_servicos,
+    SQL_faturamento
+};
