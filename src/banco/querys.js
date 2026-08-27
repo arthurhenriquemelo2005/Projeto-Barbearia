@@ -46,6 +46,7 @@ const SQL = {
             ROW_NUMBER() OVER (
                 ORDER BY a.data, a.hora, a.id
             ) AS numero,
+            a.id AS id,
             s.nome AS servico,
             s.preco AS preco,
             a.data AS data,
