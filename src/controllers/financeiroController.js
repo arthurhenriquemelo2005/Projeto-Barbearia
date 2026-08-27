@@ -6,7 +6,7 @@ const buscarFaturamento = async (req, res) => {
         if (req.usuario.tipo !== "ADMIN") {
             return res.status(403).json({
                 mensagem: "Apenas Barbeiros",
-                dados: []
+                faturamento: []
             });
         }
 

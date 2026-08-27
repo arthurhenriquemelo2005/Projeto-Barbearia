@@ -54,6 +54,7 @@ const SQL_agendamentos = {
             ROW_NUMBER() OVER (
                 ORDER BY a.data, a.hora, a.id
             ) AS numero,
+            COUNT(*) OVER () AS quantidade_agendamentos,
             a.id AS id,
             s.nome AS servico,
             s.preco AS preco,
