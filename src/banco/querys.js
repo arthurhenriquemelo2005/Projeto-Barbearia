@@ -56,6 +56,7 @@ const SQL_agendamentos = {
             ) AS numero,
             COUNT(*) OVER () AS quantidade_agendamentos,
             a.id AS id,
+            u.nome AS cliente,
             s.nome AS servico,
             s.preco AS preco,
             a.data AS data,

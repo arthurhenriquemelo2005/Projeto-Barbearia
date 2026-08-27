@@ -19,7 +19,7 @@ app.use("/auth", rotasAuth);
 // Rotas de clientes.
 app.use("/cliente", rotasCliente);
 // Rotas do barbeiro
-app.use("/rotasBarbeiro", rotasBarbeiro);
+app.use("/barber", rotasBarbeiro);
 
 
 
