@@ -6,6 +6,13 @@ const agendar = async (req, res) => {
         const usuario_id = req.usuario.id;
         const { servico_id, data, hora } = req.body;
 
+        if (req.usuario.tipo !== "CLIENTE") {
+            return res.status(403).json({
+                mensagem: "Apenas Clientes",
+                dados: []
+            });
+        }
+
         await pool.query(
             SQL.agendar,
             [usuario_id, servico_id, data, hora]
@@ -30,7 +37,8 @@ const buscarAgendamentos = async (req, res) => {
 
         if (req.usuario.tipo !== "CLIENTE") {
             return res.status(403).json({
-                mensagem: "Apenas Clientes"
+                mensagem: "Apenas Clientes",
+                dados: []
             });
         }
 
@@ -41,7 +49,8 @@ const buscarAgendamentos = async (req, res) => {
 
         if (rows.length === 0) {
             return res.status(200).json({
-                mensagem: "Você não possui agendamentos"
+                mensagem: "Você não possui agendamentos",
+                dados: []
             });
         }
 
