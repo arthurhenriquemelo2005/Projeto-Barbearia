@@ -1,6 +1,6 @@
 const pool = require("../banco/conexao");
 const SQL = require("../banco/querys");
-const gerarToken = require("../middleware/token");
+const gerarToken = require("../jwt/gerarToken");
 const { gerarHash, compararHash } = require("../helpers/hash");
 
 
@@ -36,9 +36,10 @@ const login = async (req, res) => {
         }
 
         res.status(200).json({
-            mensagem: "Login realizado",
+            mensagem: "Login realizado com sucesso",
             token: gerarToken({ 
-                id: usuario.email
+                id: usuario.id,
+                tipo: usuario.tipo
             })
         });
 
