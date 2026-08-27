@@ -33,7 +33,7 @@ const SQL_agendamentos = {
     buscarAgendamentosCliente: `
         SELECT
             ROW_NUMBER() OVER (
-                ORDER BY a.data, a.hora, a.id
+                ORDER BY a.data DESC, a.hora DESC, a.id DESC
             ) AS numero,
             a.id AS id,
             s.nome AS servico,
@@ -47,12 +47,12 @@ const SQL_agendamentos = {
         INNER JOIN servicos s
             ON a.servico_id = s.id
         WHERE a.usuario_id = $1
-        ORDER BY a.data, a.hora, a.id
+        ORDER BY a.data DESC, a.hora DESC, a.id DESC
     `,
     buscarTodosAgendamentos: `
         SELECT
             ROW_NUMBER() OVER (
-                ORDER BY a.data, a.hora, a.id
+                ORDER BY a.data DESC, a.hora DESC, a.id DESC
             ) AS numero,
             COUNT(*) OVER () AS quantidade_agendamentos,
             a.id AS id,
@@ -66,7 +66,7 @@ const SQL_agendamentos = {
             ON a.usuario_id = u.id
         INNER JOIN servicos s
             ON a.servico_id = s.id
-        ORDER BY a.data, a.hora, a.id
+        ORDER BY a.data DESC, a.hora DESC, a.id DESC
     `,
     concluirAgendamento: `
         UPDATE agendamentos
